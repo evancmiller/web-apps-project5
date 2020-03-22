@@ -15,19 +15,46 @@
                 <h1>People's Choice Awards Home</h1>
             </div>
             <div class="col-1">
-                <img src="img/cedarvilleLogo.png" alt="Cedarville University Logo" height="48" width="48" class="align-right"/>
+                <img src="img/cedarvilleLogo.png" alt="Cedarville University Logo" height="48" width="48" class="h-align-right"/>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-12">
-                Logged in as: <span id="currentUser">Guest</span>
+                Logged in as: 
+                <span id="currentUser">
+                    <?php
+                        if(isset($_SESSION["user"])){
+                            print $_SESSION["user"];
+                        }
+                        else{
+                            print "Guest";
+                        }
+                    ?>
+                </span>
             </div>
         </div>
-        <div class="row align-bottom">
+        <div class="row v-align-bottom">
             <div class="col-2">
                 <label for="username">Username</label><br>
-                <select name="username" id="username" value="" onchange="this.classList.remove('error');"></select>
+                <select name="username" id="username" value="" onchange="this.classList.remove('error');">
+                    <option value=""></option>
+                    <?php
+                        $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
+
+                        // Retrieve the list of users from the database
+                        $query = $db->prepare("SELECT id, name FROM ae_User_P5");
+                        $query->execute();
+                        $query->bind_result($userId, $user);
+                    
+                        // List the usernames as options
+                        while($query->fetch()){
+                            print "<option value='$userId'>$user</option>";
+                        }
+                        $query->close();
+                        $db->close();
+                    ?>
+                </select>
             </div>
             <div class="col-2">
                 <label for="password">Password</label><br>
@@ -39,7 +66,25 @@
             <div class="col-4"></div>
             <div class="col-2">
                 <label for="viewProject">View Project</label><br>
-                <select name="viewProject" id="viewProject" value="" onchange="this.classList.remove('error');"></select>
+                <select name="viewProject" id="viewProject" value="" onchange="this.classList.remove('error');">
+                    <option value=""></option>
+                    <?php
+                        $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
+
+                        // Retrieve the list of projects from the database
+                        // TODO: Only list projects that are complete
+                        $query = $db->prepare("SELECT id, name FROM ae_Project");
+                        $query->execute();
+                        $query->bind_result($projectId, $project);
+                    
+                        // List the projects as options
+                        while($query->fetch()){
+                            print "<option value='$projectId'>$project</option>";
+                        }
+                        $query->close();
+                        $db->close();
+                    ?>
+                </select>
             </div>
             <div class="col-1">
                 <input type="button" value="Go" onclick="viewProject();">

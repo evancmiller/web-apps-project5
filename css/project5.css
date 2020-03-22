@@ -63,16 +63,25 @@
     padding: 0;
 }
 
-.align-right{
+.h-align-right{
     float: right;
     text-align: right;
+}
+
+.h-align-center{
+    margin: 0 auto;
 }
 
 .centered{
     text-align: center;
 }
 
-.align-bottom{
+.v-align-bottom{
+    display: flex;
+    align-items: flex-end;
+}
+
+.v-align-center{
     display: flex;
     align-items: center;
 }
@@ -109,7 +118,7 @@ hr{
     border-color: #c5c6c7;
 }
 
-select, input.login{
+select, input[type="text"], input[type="password"]{
     background-color: #141a21;
     border-color: #1f2833;
     border-style: solid;
@@ -124,16 +133,6 @@ input:focus, select:focus{
     outline: none;
 }
 
-input[type="search"]{
-    background-color: #141a21;
-    border-color: #1f2833;
-    border-style: solid;
-    border-radius: 10px;
-    color: #c5c6c7;
-    padding: 8px 12px;
-    margin: 8px 0;
-}
-
 input[type="submit"], input[type="button"]{
     border: 3px solid #0b0c10;
     border-radius: 10px;
@@ -142,7 +141,9 @@ input[type="submit"], input[type="button"]{
     font-family: 'Quicksand', sans-serif;
     font-weight: lighter;
     font-size: 1.17em;
-    width: 40%;
+    padding: 8px 12px;
+    margin: 8px 0;
+    width: 100%;
     min-width: 100px;
 }
 
@@ -169,5 +170,5 @@ label{
 }
 
 .bronze{
-    color:#cd7f32 !important;
+    color: #cd7f32 !important;
 }
