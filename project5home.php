@@ -35,59 +35,86 @@
             </div>
         </div>
         <div class="row v-align-bottom">
+            <div class="col-5">
+                <div id="login" class="row v-align-bottom">
+                    <div class="col-4 no-padding">
+                        <label for="username">Username</label><br>
+                        <select name="username" id="username" value="" onchange="this.classList.remove('error');">
+                            <option value=""></option>
+                            <?php
+                                $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
+
+                                // Retrieve the list of users from the database
+                                $query = $db->prepare("SELECT id, name FROM ae_User_P5");
+                                $query->execute();
+                                $query->bind_result($userId, $user);
+                            
+                                // List the usernames as options
+                                while($query->fetch()){
+                                    print "<option value='$userId'>$user</option>";
+                                }
+                                $query->close();
+                                $db->close();
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-1 no-padding"></div>
+                    <div class="col-4 no-padding">
+                        <label for="password">Password</label><br>
+                        <input type="password" class="login" name="password" id="password" value="" onchange="this.classList.remove('error');">
+                    </div>
+                    <div class="col-1 no-padding"></div>
+                    <div class="col-2 no-padding">
+                        <input type="button" value="Login" onclick="validateLogin();">
+                    </div>
+                </div>
+                <div id="logOut" class="row v-align-bottom">
+                    <div class="col-2 no-padding">
+                        <input type="button" value="Log Out" onclick="logOut();">
+                    </div>
+                    <div class="col-10 no-padding"></div>
+                </div>
+            </div>
+            <div class="col-1"></div>
             <div class="col-2">
-                <label for="username">Username</label><br>
-                <select name="username" id="username" value="" onchange="this.classList.remove('error');">
-                    <option value=""></option>
+                <label for="course">Select Course</label><br>
+                <select name="course" id="course" value="1">
                     <?php
                         $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
-                        // Retrieve the list of users from the database
-                        $query = $db->prepare("SELECT id, name FROM ae_User_P5");
+                        // Retrieve the list of courses from the database
+                        $query = $db->prepare("SELECT id, name FROM ae_Course_P5");
                         $query->execute();
-                        $query->bind_result($userId, $user);
+                        $query->bind_result($courseId, $course);
                     
-                        // List the usernames as options
+                        // List the courses as options
                         while($query->fetch()){
-                            print "<option value='$userId'>$user</option>";
+                            print "<option value='$courseId'>$course</option>";
                         }
                         $query->close();
                         $db->close();
                     ?>
                 </select>
             </div>
-            <div class="col-2">
-                <label for="password">Password</label><br>
-                <input type="password" class="login" name="password" id="password" value="" onchange="this.classList.remove('error');">
-            </div>
             <div class="col-1">
-                <input type="button" value="Login" onclick="validateLogin();">
+                <input type="button" value="Select" onclick="changeCourse();">
             </div>
-            <div class="col-4"></div>
             <div class="col-2">
                 <label for="viewProject">View Project</label><br>
-                <select name="viewProject" id="viewProject" value="" onchange="this.classList.remove('error');">
-                    <option value=""></option>
-                    <?php
-                        $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
-
-                        // Retrieve the list of projects from the database
-                        // TODO: Only list projects that are complete
-                        $query = $db->prepare("SELECT id, name FROM ae_Project");
-                        $query->execute();
-                        $query->bind_result($projectId, $project);
-                    
-                        // List the projects as options
-                        while($query->fetch()){
-                            print "<option value='$projectId'>$project</option>";
-                        }
-                        $query->close();
-                        $db->close();
-                    ?>
-                </select>
+                <select name="viewProject" id="viewProject" value="" onchange="this.classList.remove('error');"></select>
             </div>
             <div class="col-1">
-                <input type="button" value="Go" onclick="viewProject();">
+                <input type="button" value="View" onclick="viewProject();">
+            </div>
+        </div>
+        <div id="vote" class="row v-align-bottom">
+            <div class="col-9"></div>
+            <div class="col-2">
+                <label for="voteProject">Vote for Project</label><br>
+                <select name="voteProject" id="voteProject" value="" onchange="this.classList.remove('error');"></select>
+            </div>
+            <div class="col-1">
+                <input type="button" value="Vote" onclick="voteProject();">
             </div>
         </div>
         <div class="row">
@@ -96,28 +123,6 @@
             <div class="col-3"><h2 class="silver">Silver Medals</h2></div>
             <div class="col-3"><h2 class="bronze">Bronze Medals</h2></div>
         </div>
-        <div class="row section">
-            <div class="col-3"><h3>Student 1</h3></div>
-            <div class="col-3">
-                <h3 class="gold">Project 2</h3>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-3">
-                <h3 class="bronze">Project 3</h3><br>
-                <h3 class="bronze">Project 4</h3>
-            </div>
-        </div>
-        <div class="row section">
-            <div class="col-3"><h3>Student 2</h3>
-            </div>
-            <div class="col-3">
-                <h3 class="gold">Project 3</h3>
-            </div>
-            <div class="col-3">
-                <h3 class="silver">Project 1</h3><br>
-                <h3 class="silver">Project 2</h3>
-            </div>
-            <div class="col-3"></div>
-        </div>
+        <div id="students"></div>
     </body>
 </html>
