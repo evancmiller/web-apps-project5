@@ -28,7 +28,11 @@
                             print $_SESSION["user"];
                         }
                         else{
-                            print "Guest";
+                            print "Guest<div id='guest' hidden></div>";
+                        }
+
+                        if(isset($_SESSION["role"]) && $_SESSION["role"] == "admin"){
+                            print "<div id='admin' hidden></div>";
                         }
                     ?>
                 </span>
@@ -45,7 +49,8 @@
                                 $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
                                 // Retrieve the list of users from the database
-                                $query = $db->prepare("SELECT id, name FROM ae_User_P5");
+                                $query = $db->prepare("SELECT id, name
+                                                       FROM ae_User_P5");
                                 $query->execute();
                                 $query->bind_result($userId, $user);
                             
@@ -83,7 +88,8 @@
                         $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
                         // Retrieve the list of courses from the database
-                        $query = $db->prepare("SELECT id, name FROM ae_Course_P5");
+                        $query = $db->prepare("SELECT id, name
+                                               FROM ae_Course_P5");
                         $query->execute();
                         $query->bind_result($courseId, $course);
                     
@@ -116,6 +122,12 @@
             <div class="col-1">
                 <input type="button" value="Vote" onclick="voteProject();">
             </div>
+        </div>
+        <div id="adminOnly" class="row">
+            <div class="col-2">
+                <input type="button" value="Admin Page" onclick="window.location.href = 'project5admin.php'">
+            </div>
+            <div class="col-10"></div>
         </div>
         <div class="row">
             <div class="col-3"><h2>Student</h2></div>

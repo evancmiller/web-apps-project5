@@ -4,10 +4,13 @@ function changeCourse(){
 
 function logOut(){
     $.post("project5logOut.php");
-    $("#currentUser").html("Guest");
+    $("#currentUser").html("Guest<div id='guest' hidden></div>");
     $("#logOut").toggle(false);
     $("#vote").toggle(false);
+    $("#adminOnly").toggle(false);
     $("#login").toggle(true);
+    voteProjectInput.value = "";
+    user = null;
 }
 
 function setCourse(id){
@@ -79,24 +82,32 @@ function validateForm(){
 
 function validateLogin(){
     if(validateForm()){
-        $.post("project5login.php",
+        $.getJSON("project5login.php",
         {
             userId: userInput.value,
             pass: passInput.value
         },
         function(data){
-            if(data == ""){
+            if(data.role == ""){
                 passInput.classList.add("error");
                 alert("Incorrect password");
             }
             else{
-                $("#currentUser").html(data);
                 $("#login").toggle(false);
                 $("#logOut").toggle(true);
-                $("#vote").toggle(true);
                 userInput.value = "";
                 passInput.value = "";
-                // TODO: Have the PHP return the user's role. If they're an admin, display a link to admin page and hide voting option.
+                user = data.id;
+
+                let html = data.name;
+                if(data.role == "user"){
+                    $("#vote").toggle(true);
+                }
+                else if(data.role == "admin"){
+                    $("#adminOnly").toggle(true);
+                    html += "<div id='admin' hidden></div>";
+                }
+                $("#currentUser").html(html);
             }
         });
     }
@@ -112,21 +123,45 @@ function viewProject(){
 }
 
 function voteProject(){
+    // Check if user has selected a project
     if(voteProjectInput.value == ""){
         voteProjectInput.classList.add("error");
     }
+    // Check if user has already voted for the selected project
     else{
-        // Check if user has already voted for the selected project
-        // If not, redirect to vote page and send the selected project id
+        $.post("project5hasVoted.php",
+        {
+            userId: user,
+            projectId: voteProjectInput.value
+        },
+        function(data){
+            if(data == 1){
+                alert("You have already voted for this project");
+            }
+            else if(data == 0){
+                window.location.href = "project5vote.php";
+            }
+        });
     }
 }
 
-if($("#currentUser").html().trim() == "Guest"){
+// If an element with id='guest' exists, then no one is logged in
+if($("#guest").length){
     $("#logOut").toggle(false);
     $("#vote").toggle(false);
+    $("#adminOnly").toggle(false);
 }
+// Otherwise, the user is logged in
 else{
     $("#login").toggle(false);
+
+    // If an element with id='admin' exists, then the user is logged in as an admin
+    if($("#admin").length){
+        $("#vote").toggle(false);
+    }
+    else{
+        $("#adminOnly").toggle(false);
+    }
 }
 
 var userInput = document.getElementById("username");
@@ -134,5 +169,6 @@ var passInput = document.getElementById("password");
 var viewProjectInput = document.getElementById("viewProject");
 var voteProjectInput = document.getElementById("voteProject");
 var courseInput = document.getElementById("course");
+var user = null;
 
 setCourse(1);
