@@ -29,7 +29,7 @@
 
     // Record the user's write-in vote
     $query = $db->prepare("INSERT INTO ae_Write_In (project_team_id, description)
-                           VALUES (?, ?)";
+                           VALUES (?, ?)");
     $query->bind_param("is", $_POST["writeInId"], $_POST["writeInText"]);
     $query->execute();
     $query->close();

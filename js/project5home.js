@@ -1,7 +1,10 @@
+// When the user selects a course, set the course and log them out
 function changeCourse(){
     setCourse(courseInput.value);
+    logOut();
 }
 
+// When the user logs out, unset the session variables and show/hide HTML elements as needed
 function logOut(){
     $.post("project5logOut.php");
     $("#currentUser").html("Guest<div id='guest' hidden></div>");
@@ -62,8 +65,14 @@ function setCourse(id){
         });
         $("#students").html(html);
     });
+
+    // Only show usernames for the current course
+    $("#username").children().each(function(){
+        $(this).toggle($(this).val() == "" || $(this).attr("data-courseId") == id);
+    });
 }
 
+// Require both the username and the password to not be blank
 function validateForm(){
     let valid = true;
     userInput.classList.remove("error");
@@ -81,6 +90,7 @@ function validateForm(){
 }
 
 function validateLogin(){
+    // If the username and password aren't blank, check if they're a valid combination
     if(validateForm()){
         $.getJSON("project5login.php",
         {
@@ -88,10 +98,12 @@ function validateLogin(){
             pass: passInput.value
         },
         function(data){
+            // If they're invalid, notify the user
             if(data.role == ""){
                 passInput.classList.add("error");
                 alert("Incorrect password");
             }
+            // Otherwise, show/hide HTML elements as needed
             else{
                 $("#login").toggle(false);
                 $("#logOut").toggle(true);
@@ -118,16 +130,16 @@ function viewProject(){
         viewProjectInput.classList.add("error");
     }
     else{
-        // Redirect to view page and send the selected project id
+        // TODO: Redirect to view page and send the selected project id
     }
 }
 
 function voteProject(){
-    // Check if user has selected a project
+    // If the user hasn't selected a project, let them know
     if(voteProjectInput.value == ""){
         voteProjectInput.classList.add("error");
     }
-    // Check if user has already voted for the selected project
+    // Otherwise, check if they've already voted for the project
     else{
         $.post("project5hasVoted.php",
         {
@@ -135,9 +147,11 @@ function voteProject(){
             projectId: voteProjectInput.value
         },
         function(data){
+            // If so, let them know
             if(data == 1){
                 alert("You have already voted for this project");
             }
+            // If not, redirect to voting page
             else if(data == 0){
                 window.location.href = "project5vote.php";
             }
@@ -171,4 +185,21 @@ var voteProjectInput = document.getElementById("voteProject");
 var courseInput = document.getElementById("course");
 var user = null;
 
-setCourse(1);
+// If the user isn't logged in, set the course using the default course id
+if($("#guest").length){
+    setCourse(1);
+}
+// Otherwise, find the user's course and set the course using its id
+else{
+    let username = $("#currentUser").html().trim();
+    let courseId = 1;
+
+    $("#username").children().each(function(){
+        if($(this).html().trim() == username){
+            courseId = $(this).attr("data-courseId");
+            return false;
+        }
+    });
+    courseInput.value = courseId;
+    setCourse(courseId);
+}
