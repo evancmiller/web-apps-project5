@@ -17,12 +17,12 @@
 		    	$project_id = $_GET["id"];
 			$db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
-	                $query = $db->prepare("SELECT name 
+	                $query = $db->prepare("SELECT name, course_id 
 	                                       FROM ae_Project 
 	                                       WHERE id = ?");
 	                $query->bind_param("i", $project_id);
 	                $query->execute();
-	                $query->bind_result($_SESSION["projectName"]);
+	                $query->bind_result($_SESSION["projectName"], $courseId);
 	                $query->fetch();
 	                $query->close();
 	                print "<h1>{$_SESSION['projectName']}</h1>";
@@ -36,8 +36,8 @@
 		  <?php
                     	$query = $db->prepare("SELECT name, id 
 	                                       FROM ae_Project 
-	                                       WHERE status !=\"initial\"");
-	                $query->bind_param("i", $project_id);
+	                                       WHERE course_id = ?");
+	                $query->bind_param("i", $courseId);
 	                $query->execute();
 	                $query->bind_result($select_project_name, $select_project_id);
 	                $query->fetch();
