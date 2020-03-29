@@ -13,6 +13,7 @@
         <div class="row">
             <div class="col-11">
                 <?php
+                    // If a project is selected, retrieve and print the project name
                     if(isset($_SESSION["projectId"])){
                         $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
@@ -27,6 +28,7 @@
 
                         print "<h1>{$_SESSION['projectName']} Voting</h1>"; 
                     }
+                    // Otherwise, redirect to the homepage
                     else{
                         header("Location: project5home.php");
                     }
@@ -68,6 +70,7 @@
                             $teams = array();
                             $userTeamId = null;
 
+                            // Retrieve the teams from the database
                             $query = $db->prepare("SELECT u.id, u.name, pt.id
                                                    FROM ae_User_P5 AS u
                                                    INNER JOIN
@@ -97,6 +100,7 @@
                             }
                             $query->close();
 
+                            // List each team as an option
                             $teamOptions = "";
                             foreach($teams as $id => $team){
                                 $teamOptions = $teamOptions."<option value=$id>$team</option>";
@@ -150,11 +154,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-5"></div>
+            <div class="col-4"></div>
             <div class="col-2">
                 <input type="button" class="h-align-center" value="Submit Vote" onclick="submit();">
             </div>
-            <div class="col-5"></div>
+            <div class="col-2">
+                <input type="button" class="h-align-center" value="Back" onclick="window.location.href = 'project5home.php';">
+            </div>
+            <div class="col-4"></div>
         </div>
     </body>
 </html>

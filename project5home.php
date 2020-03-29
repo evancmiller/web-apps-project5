@@ -24,13 +24,16 @@
                 Logged in as: 
                 <span id="currentUser">
                     <?php
+                        // If the user is logged in, print their name
                         if(isset($_SESSION["user"])){
                             print $_SESSION["user"];
                         }
+                        // Otherwise, print "Guest" and add a hidden guest element
                         else{
                             print "Guest<div id='guest' hidden></div>";
                         }
 
+                        // Add hidden admin element if the user is an admin
                         if(isset($_SESSION["role"]) && $_SESSION["role"] == "admin"){
                             print "<div id='admin' hidden></div>";
                         }
@@ -49,14 +52,14 @@
                                 $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
 
                                 // Retrieve the list of users from the database
-                                $query = $db->prepare("SELECT id, name
+                                $query = $db->prepare("SELECT id, name, course_id
                                                        FROM ae_User_P5");
                                 $query->execute();
-                                $query->bind_result($userId, $user);
+                                $query->bind_result($userId, $user, $courseId);
                             
                                 // List the usernames as options
                                 while($query->fetch()){
-                                    print "<option value='$userId'>$user</option>";
+                                    print "<option value='$userId' data-courseId='$courseId'>$user</option>";
                                 }
                                 $query->close();
                                 $db->close();
