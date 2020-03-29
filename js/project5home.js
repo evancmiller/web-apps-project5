@@ -130,7 +130,7 @@ function viewProject(){
         viewProjectInput.classList.add("error");
     }
     else{
-        // TODO: Redirect to view page and send the selected project id
+        window.location.href = "project5viewProject.php?id="+viewProjectInput.value;
     }
 }
 
