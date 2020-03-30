@@ -33,7 +33,7 @@
     $db = mysqli_connect("james", "cs3220", "", "cs3220_Sp20");
     $combined = new Combined();
 
-    // Retrieve the course's projects from the database
+    // Retrieve the course's projects from the database and put them in an array
     $query = $db->prepare("SELECT id, name, status
                            FROM ae_Project
                            WHERE course_id = ?");
@@ -49,7 +49,7 @@
     }
     $query->close();
 
-    // Retrieve the course's users from the database
+    // Retrieve the course's users from the database and put them in an array
     $query = $db->prepare("SELECT id, name
                            FROM ae_User_P5 
                            WHERE course_id = ? AND role = 'user'");
@@ -65,6 +65,7 @@
     $query->close();
 
     // Retrieve each user's gold/silver/bronze awards from the database
+    // and put them in their respective arrays
     foreach($combined->users as $user){
         $query = $db->prepare("SELECT p.name, pt.result
                                FROM ae_Project_Team_User AS ptu 

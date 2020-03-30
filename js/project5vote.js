@@ -1,3 +1,4 @@
+// These first 3 functions ensure that each team can only be selected once
 function firstChange(){
     $("#first").removeClass('error');
 
@@ -40,6 +41,7 @@ function thirdChange(){
     }
 }
 
+// Ensure that all fields have been filled out
 function submit(){
     let error = "";
     
@@ -80,9 +82,11 @@ function submit(){
         $("#writeInText").addClass("error");
     }
 
+    // If one or more fields are blank, notify the user
     if(error != ""){
         alert(error);
     }
+    // Otherwise, submit the user's votes and redirect to homepage
     else{
         $.post("project5submit.php",
         {
@@ -94,8 +98,6 @@ function submit(){
         });
 
         window.location.href = "project5home.php";
-
-        // TODO: Fix project5submit.php
     }
 }
 
