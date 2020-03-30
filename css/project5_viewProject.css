@@ -1,0 +1,20 @@
+#projects{
+    width: 20%;
+}
+#vote_counter{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+#vote_table {
+    width: 80%;
+}
+
+#vote_table td{
+    text-align: center;    
+}
+
+#back{
+    width: 10%;
+}
